@@ -27,7 +27,7 @@ document.head.insertAdjacentHTML('afterbegin', `
     }
 
     ripple-content, .ripple-content{
-      position:relative;
+      position: relative;
       z-index: 1;
     }
 
@@ -81,14 +81,9 @@ class RippleMethods {
       _rippleEl.style.animationDuration = this.elementsToRipple.dataset.rippleDuration ? this.elementsToRipple.dataset.rippleDuration : originalElement.dataset.rippleDuration || '0.5s';
 
       if (e?.isTrusted) {
-        if (originalElement.contains(this.elementsToRipple)) {
-          _rippleEl.style.left = `${e.clientX - this.rippleElBounds.x - this.rippleRadius}px`;
-          _rippleEl.style.top = `${e.clientY - this.rippleElBounds.y - this.rippleRadius}px`;
-        } else {
-          this.rippleElBounds = originalElement.getBoundingClientRect();
-          _rippleEl.style.left = `calc(${((e.clientX - this.rippleElBounds.left) / this.rippleElBounds.width) * 100}% - ${this.rippleRadius}px)`;
-          _rippleEl.style.top = `calc(${((e.clientY - this.rippleElBounds.top) / this.rippleElBounds.height) * 100}% - ${this.rippleRadius}px)`;
-        }
+        this.rippleElBounds = originalElement.getBoundingClientRect();
+        _rippleEl.style.left = `calc(${((e.clientX - this.rippleElBounds.left) / this.rippleElBounds.width) * 100}% - ${this.rippleRadius}px)`;
+        _rippleEl.style.top = `calc(${((e.clientY - this.rippleElBounds.top) / this.rippleElBounds.height) * 100}% - ${this.rippleRadius}px)`;
       } else {
         _rippleEl.style.left = `${(this.rippleElBounds.width / 2) - this.rippleRadius}px`;
         _rippleEl.style.top = `${(this.rippleElBounds.height / 2) - this.rippleRadius}px`;
