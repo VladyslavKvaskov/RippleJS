@@ -21,7 +21,7 @@
 </head>
 
 <body>
-  <button is="ripple-button" data-ripple-placement="center" type="button" class="btn btn-primary btn-sm">
+  <button is="ripple-button" type="button" class="btn btn-primary btn-sm">
     <div class="ripple-content">Primary button</div>
   </button>
   <button is="ripple-button" data-ripple-color="#000" data-ripple-size="30" type="button" class="btn btn-secondary btn-sm">
@@ -46,6 +46,54 @@
       </p>
     </div>
   </div>
+
+  <h3 class="display-4">[data-ripple-position]</h3>
+  <button is="ripple-button" data-ripple-position="top-left" type="button" class="btn btn-primary btn-sm">
+    <div class="ripple-content">top-left</div>
+  </button>
+  <button is="ripple-button" data-ripple-position="top" type="button" class="btn btn-primary btn-sm">
+    <div class="ripple-content">top</div>
+  </button>
+  <button is="ripple-button" data-ripple-position="top-right" type="button" class="btn btn-primary btn-sm">
+    <div class="ripple-content">top-right</div>
+  </button>
+  <button is="ripple-button" data-ripple-position="center-left" type="button" class="btn btn-primary btn-sm">
+    <div class="ripple-content">center-left</div>
+  </button>
+  <button is="ripple-button" data-ripple-position="center" type="button" class="btn btn-primary btn-sm">
+    <div class="ripple-content">center</div>
+  </button>
+  <button is="ripple-button" data-ripple-position="center-right" type="button" class="btn btn-primary btn-sm">
+    <div class="ripple-content">center-right</div>
+  </button>
+  <button is="ripple-button" data-ripple-position="bottom-left" type="button" class="btn btn-primary btn-sm">
+    <div class="ripple-content">bottom-left</div>
+  </button>
+  <button is="ripple-button" data-ripple-position="bottom" type="button" class="btn btn-primary btn-sm">
+    <div class="ripple-content">bottom</div>
+  </button>
+  <button is="ripple-button" data-ripple-position="bottom-right" type="button" class="btn btn-primary btn-sm">
+    <div class="ripple-content">bottom-right</div>
+  </button>
+
+  <div class="mt-3">
+    <button is="ripple-button" data-ripple-position="25px 0px" type="button" class="btn btn-primary btn-sm">
+      <div class="ripple-content">25px 0px</div>
+    </button>
+    <button is="ripple-button" data-ripple-position="50% 50%" type="button" class="btn btn-primary btn-sm">
+      <div class="ripple-content">50% 50%</div>
+    </button>
+    <button is="ripple-button" data-ripple-position="5vmin 0%" type="button" class="btn btn-primary btn-sm">
+      <div class="ripple-content">5vmin 0%</div>
+    </button>
+    <button is="ripple-button" data-ripple-position="1vw 0.3vh" type="button" class="btn btn-primary btn-sm">
+      <div class="ripple-content">1vw 0.3vh</div>
+    </button>
+    <button is="ripple-button" data-ripple-position="5% 10px" type="button" class="btn btn-primary btn-sm">
+      <div class="ripple-content">5% 10px</div>
+    </button>
+  </div>
+
 
   <script src="ripple.js"></script>
 </body>

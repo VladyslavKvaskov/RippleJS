@@ -49,13 +49,24 @@ class RippleMethods {
             this.elementsToRipple.addEventListener('click', (e) => {
                 this.elementsToRipple.showRipple(e);
             });
-
-            this.elementsToRipple.addEventListener('keyup', (e) => {
-                if (e.key === 'Enter') {
-                    this.elementsToRipple.click();
-                }
-            });
         }
+        if (rippleElement[0]?.dataset?.rippleTarget) {
+            this.targetRipple = document.querySelectorAll(rippleElement[0].dataset.rippleTarget).length > 0 ? document.querySelectorAll(rippleElement[0].dataset.rippleTarget) : [rippleElement[0]];
+            for (this.rippleTargets of this.targetRipple) {
+                if (this.rippleTargets !== rippleElement) {
+                    this.rippleTargets.classList.add('ripple-target');
+                }
+            }
+            console.log(this.targetRipple);
+            return this.targetRipple;
+        }
+        return rippleElement;
+    }
+
+    attributeChangedCallback(element, oldValue, newValue) {}
+
+    allowedUnits() {
+        return ['vw', 'vh', 'vmin', 'vmax', '%', 'px', 'em', 'rem'];
     }
 
     onElementConnect(rippleElement) {
@@ -83,19 +94,66 @@ class RippleMethods {
             _rippleEl.style.opacity = this.elementsToRipple.dataset.rippleOpacity ? this.elementsToRipple.dataset.rippleOpacity : originalElement.dataset.rippleOpacity || '0.7';
             _rippleEl.style.animationDuration = this.elementsToRipple.dataset.rippleDuration ? this.elementsToRipple.dataset.rippleDuration : originalElement.dataset.rippleDuration || '0.5s';
 
-            if (e?.isTrusted) {
-                if (this.targetRipple.dataset.ripplePlacement == 'center') {
-                    _rippleEl.style.left = `${this.rippleElBounds.width / 2 - this.rippleRadius}px`;
-                    _rippleEl.style.top = `${this.rippleElBounds.height / 2 - this.rippleRadius}px`;
-                } else {
-                    this.rippleElBounds = originalElement.getBoundingClientRect();
-                    _rippleEl.style.left = `calc(${((e.clientX - this.rippleElBounds.left) / this.rippleElBounds.width) * 100}% - ${this.rippleRadius}px)`;
-                    _rippleEl.style.top = `calc(${((e.clientY - this.rippleElBounds.top) / this.rippleElBounds.height) * 100}% - ${this.rippleRadius}px)`;
-                }
-            } else {
+            if (this.targetRipple.dataset.ripplePosition === 'center') {
                 _rippleEl.style.left = `${this.rippleElBounds.width / 2 - this.rippleRadius}px`;
                 _rippleEl.style.top = `${this.rippleElBounds.height / 2 - this.rippleRadius}px`;
+            } else if (this.targetRipple.dataset.ripplePosition === 'top') {
+                _rippleEl.style.left = `${this.rippleElBounds.width / 2 - this.rippleRadius}px`;
+                _rippleEl.style.top = `${0 - this.rippleRadius}px`;
+            } else if (this.targetRipple.dataset.ripplePosition === 'bottom') {
+                _rippleEl.style.left = `${this.rippleElBounds.width / 2 - this.rippleRadius}px`;
+                _rippleEl.style.top = `${this.rippleElBounds.height - this.rippleRadius}px`;
+            } else if (this.targetRipple.dataset.ripplePosition === 'left') {
+                _rippleEl.style.left = `${0 - this.rippleRadius}px`;
+                _rippleEl.style.top = `${this.rippleElBounds.height / 2 - this.rippleRadius}px`;
+            } else if (this.targetRipple.dataset.ripplePosition === 'right') {
+                _rippleEl.style.left = `${this.rippleElBounds.width - this.rippleRadius}px`;
+                _rippleEl.style.top = `${this.rippleElBounds.height / 2 - this.rippleRadius}px`;
+            } else if (this.targetRipple.dataset.ripplePosition === 'top-left') {
+                _rippleEl.style.left = `${0 - this.rippleRadius}px`;
+                _rippleEl.style.top = `${0 - this.rippleRadius}px`;
+            } else if (this.targetRipple.dataset.ripplePosition === 'top-right') {
+                _rippleEl.style.left = `${this.rippleElBounds.width - this.rippleRadius}px`;
+                _rippleEl.style.top = `${0 - this.rippleRadius}px`;
+            } else if (this.targetRipple.dataset.ripplePosition === 'center-left') {
+                _rippleEl.style.left = `${0 - this.rippleRadius}px`;
+                _rippleEl.style.top = `${this.rippleElBounds.height / 2 - this.rippleRadius}px`;
+            } else if (this.targetRipple.dataset.ripplePosition === 'center-right') {
+                _rippleEl.style.left = `${this.rippleElBounds.width - this.rippleRadius}px`;
+                _rippleEl.style.top = `${this.rippleElBounds.height / 2 - this.rippleRadius}px`;
+            } else if (this.targetRipple.dataset.ripplePosition === 'bottom-left') {
+                _rippleEl.style.left = `${0 - this.rippleRadius}px`;
+                _rippleEl.style.top = `${this.rippleElBounds.height - this.rippleRadius}px`;
+            } else if (this.targetRipple.dataset.ripplePosition === 'bottom-right') {
+                _rippleEl.style.left = `${this.rippleElBounds.width - this.rippleRadius}px`;
+                _rippleEl.style.top = `${this.rippleElBounds.height - this.rippleRadius}px`;
+            } else if (this.targetRipple.dataset.ripplePosition) {
+                this.ripplePosition = this.targetRipple.dataset.ripplePosition.split(' ');
+                if (this.ripplePosition.length > 0) {
+                    if (this.ripplePosition[0] && this.ripplePosition[1]) {
+                        _rippleEl.style.left = `calc(${this.ripplePosition[0]} - ${this.rippleRadius}px)`;
+                        _rippleEl.style.top = `calc(${this.ripplePosition[1]} - ${this.rippleRadius}px)`;
+                    } else if (this.ripplePosition[0]) {
+                        _rippleEl.style.left = `calc(${this.ripplePosition[0]} - ${this.rippleRadius}px)`;
+                        _rippleEl.style.top = `${this.rippleElBounds.height / 2 - this.rippleRadius}px`;
+                    }
+                }
+            } else if (!this.targetRipple.dataset.ripplePosition) {
+                if (e?.isTrusted) {
+                    if (e?.offsetX || e?.offsetHeight || e?.pageX || e?.pageY || e?.clientX || e?.clientY || e?.screenX || e?.screenY) {
+                        this.rippleElBounds = originalElement.getBoundingClientRect();
+                        _rippleEl.style.left = `calc(${((e.clientX - this.rippleElBounds.left) / this.rippleElBounds.width) * 100}% - ${this.rippleRadius}px)`;
+                        _rippleEl.style.top = `calc(${((e.clientY - this.rippleElBounds.top) / this.rippleElBounds.height) * 100}% - ${this.rippleRadius}px)`;
+                    } else {
+                        _rippleEl.style.left = `${this.rippleElBounds.width / 2 - this.rippleRadius}px`;
+                        _rippleEl.style.top = `${this.rippleElBounds.height / 2 - this.rippleRadius}px`;
+                    }
+                } else {
+                    _rippleEl.style.left = `${this.rippleElBounds.width / 2 - this.rippleRadius}px`;
+                    _rippleEl.style.top = `${this.rippleElBounds.height / 2 - this.rippleRadius}px`;
+                }
             }
+
             _rippleEl.classList.add('ripple');
             _rippleEl.addEventListener('animationend', () => {
                 _rippleEl.remove();
@@ -109,17 +167,8 @@ class RippleMethods {
 class RippleElement extends HTMLElement {
     constructor() {
         super();
-        new RippleMethods().rippleConstructor([this]);
         this.targetRipple = [this];
-
-        if (this?.dataset.rippleTarget) {
-            this.targetRipple = document.querySelectorAll(this.dataset.rippleTarget).length > 0 ? document.querySelectorAll(this.dataset.rippleTarget) : [this];
-            for (this.rippleTargets of this.targetRipple) {
-                if (this.rippleTargets !== this) {
-                    this.rippleTargets.classList.add('ripple-target');
-                }
-            }
-        }
+        this.targetRipple = new RippleMethods().rippleConstructor([this]);
     }
 
     showRipple(e = '') {
@@ -129,23 +178,24 @@ class RippleElement extends HTMLElement {
     connectedCallback() {
         new RippleMethods().onElementConnect(this.targetRipple);
     }
+
+    static get observedAttributes() {
+        return ['data-ripple-target'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'data-ripple-target') {
+            new RippleMethods().attributeChangedCallback(this, oldValue, newValue);
+        }
+    }
 }
 customElements.define('ripple-element', RippleElement);
 
 class RippleButton extends HTMLButtonElement {
     constructor() {
         super();
-        new RippleMethods().rippleConstructor([this]);
         this.targetRipple = [this];
-
-        if (this?.dataset.rippleTarget) {
-            this.targetRipple = document.querySelectorAll(this.dataset.rippleTarget).length > 0 ? document.querySelectorAll(this.dataset.rippleTarget) : [this];
-            for (this.rippleTargets of this.targetRipple) {
-                if (this.rippleTargets !== this) {
-                    this.rippleTargets.classList.add('ripple-target');
-                }
-            }
-        }
+        this.targetRipple = new RippleMethods().rippleConstructor([this]);
     }
 
     showRipple(e = '') {
@@ -163,17 +213,8 @@ customElements.define('ripple-button', RippleButton, {
 class RippleAnchor extends HTMLAnchorElement {
     constructor() {
         super();
-        new RippleMethods().rippleConstructor([this]);
         this.targetRipple = [this];
-
-        if (this?.dataset.rippleTarget) {
-            this.targetRipple = document.querySelectorAll(this.dataset.rippleTarget).length > 0 ? document.querySelectorAll(this.dataset.rippleTarget) : [this];
-            for (this.rippleTargets of this.targetRipple) {
-                if (this.rippleTargets !== this) {
-                    this.rippleTargets.classList.add('ripple-target');
-                }
-            }
-        }
+        this.targetRipple = new RippleMethods().rippleConstructor([this]);
     }
 
     showRipple(e = '') {
@@ -191,17 +232,8 @@ customElements.define('ripple-anchor', RippleAnchor, {
 class RippleSpan extends HTMLSpanElement {
     constructor() {
         super();
-        new RippleMethods().rippleConstructor([this]);
         this.targetRipple = [this];
-
-        if (this?.dataset.rippleTarget) {
-            this.targetRipple = document.querySelectorAll(this.dataset.rippleTarget).length > 0 ? document.querySelectorAll(this.dataset.rippleTarget) : [this];
-            for (this.rippleTargets of this.targetRipple) {
-                if (this.rippleTargets !== this) {
-                    this.rippleTargets.classList.add('ripple-target');
-                }
-            }
-        }
+        this.targetRipple = new RippleMethods().rippleConstructor([this]);
     }
 
     showRipple(e = '') {
@@ -219,17 +251,8 @@ customElements.define('ripple-span', RippleSpan, {
 class RippleDiv extends HTMLDivElement {
     constructor() {
         super();
-        new RippleMethods().rippleConstructor([this]);
         this.targetRipple = [this];
-
-        if (this?.dataset.rippleTarget) {
-            this.targetRipple = document.querySelectorAll(this.dataset.rippleTarget).length > 0 ? document.querySelectorAll(this.dataset.rippleTarget) : [this];
-            for (this.rippleTargets of this.targetRipple) {
-                if (this.rippleTargets !== this) {
-                    this.rippleTargets.classList.add('ripple-target');
-                }
-            }
-        }
+        this.targetRipple = new RippleMethods().rippleConstructor([this]);
     }
 
     showRipple(e = '') {
@@ -247,17 +270,8 @@ customElements.define('ripple-div', RippleDiv, {
 class RippleLabel extends HTMLLabelElement {
     constructor() {
         super();
-        new RippleMethods().rippleConstructor([this]);
         this.targetRipple = [this];
-
-        if (this?.dataset.rippleTarget) {
-            this.targetRipple = document.querySelectorAll(this.dataset.rippleTarget).length > 0 ? document.querySelectorAll(this.dataset.rippleTarget) : [this];
-            for (this.rippleTargets of this.targetRipple) {
-                if (this.rippleTargets !== this) {
-                    this.rippleTargets.classList.add('ripple-target');
-                }
-            }
-        }
+        this.targetRipple = new RippleMethods().rippleConstructor([this]);
     }
 
     showRipple(e = '') {
@@ -275,17 +289,8 @@ customElements.define('ripple-label', RippleLabel, {
 class RippleBody extends HTMLBodyElement {
     constructor() {
         super();
-        new RippleMethods().rippleConstructor([this]);
         this.targetRipple = [this];
-
-        if (this?.dataset.rippleTarget) {
-            this.targetRipple = document.querySelectorAll(this.dataset.rippleTarget).length > 0 ? document.querySelectorAll(this.dataset.rippleTarget) : [this];
-            for (this.rippleTargets of this.targetRipple) {
-                if (this.rippleTargets !== this) {
-                    this.rippleTargets.classList.add('ripple-target');
-                }
-            }
-        }
+        this.targetRipple = new RippleMethods().rippleConstructor([this]);
     }
 
     showRipple(e = '') {
