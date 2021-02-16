@@ -1,10 +1,14 @@
-document.head.insertAdjacentHTML(
+(document.head || document.querySelector('head')).insertAdjacentHTML(
     'afterbegin',
     `
   <style>
     [is="ripple-anchor"], [is="ripple-span"], [is="ripple-div"], [is="ripple-label"], ripple-element{
       overflow: hidden;
       outline: none;
+    }
+
+    ripple-element{
+        display: inline-block;
     }
 
     button[is="ripple-button"]{
@@ -31,6 +35,7 @@ document.head.insertAdjacentHTML(
     ripple-content, .ripple-content{
       position: relative;
       z-index: 1;
+      display: block;
     }
 
     @keyframes ripple-element {
@@ -52,18 +57,21 @@ class RippleMethods {
         }
         if (rippleElement[0]?.dataset?.rippleTarget) {
             this.targetRipple = document.querySelectorAll(rippleElement[0].dataset.rippleTarget).length > 0 ? document.querySelectorAll(rippleElement[0].dataset.rippleTarget) : [rippleElement[0]];
-            for (this.rippleTargets of this.targetRipple) {
-                if (this.rippleTargets !== rippleElement) {
-                    this.rippleTargets.classList.add('ripple-target');
-                }
-            }
-            console.log(this.targetRipple);
             return this.targetRipple;
         }
         return rippleElement;
     }
 
-    attributeChangedCallback(element, oldValue, newValue) {}
+    attributeChangedCallback(rippleElement, oldValue, newValue) {
+        if (rippleElement[0]?.dataset?.rippleTarget) {
+            this.targetRipple = document.querySelectorAll(rippleElement[0].dataset.rippleTarget).length > 0 ? document.querySelectorAll(rippleElement[0].dataset.rippleTarget) : [rippleElement[0]];
+            this.onElementConnect(this.targetRipple);
+            return this.targetRipple;
+        }
+
+        this.onElementConnect(rippleElement);
+        return rippleElement;
+    }
 
     allowedUnits() {
         return ['vw', 'vh', 'vmin', 'vmax', '%', 'px', 'em', 'rem'];
@@ -135,7 +143,7 @@ class RippleMethods {
                         _rippleEl.style.top = `calc(${this.ripplePosition[1]} - ${this.rippleRadius}px)`;
                     } else if (this.ripplePosition[0]) {
                         _rippleEl.style.left = `calc(${this.ripplePosition[0]} - ${this.rippleRadius}px)`;
-                        _rippleEl.style.top = `${this.rippleElBounds.height / 2 - this.rippleRadius}px`;
+                        _rippleEl.style.top = `${this.ripplePosition[0] - this.rippleRadius}px`;
                     }
                 }
             } else if (!this.targetRipple.dataset.ripplePosition) {
@@ -185,7 +193,7 @@ class RippleElement extends HTMLElement {
 
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === 'data-ripple-target') {
-            new RippleMethods().attributeChangedCallback(this, oldValue, newValue);
+            this.targetRipple = new RippleMethods().attributeChangedCallback([this], oldValue, newValue);
         }
     }
 }
@@ -204,6 +212,16 @@ class RippleButton extends HTMLButtonElement {
 
     connectedCallback() {
         new RippleMethods().onElementConnect(this.targetRipple);
+    }
+
+    static get observedAttributes() {
+        return ['data-ripple-target'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'data-ripple-target') {
+            this.targetRipple = new RippleMethods().attributeChangedCallback([this], oldValue, newValue);
+        }
     }
 }
 customElements.define('ripple-button', RippleButton, {
@@ -224,6 +242,16 @@ class RippleAnchor extends HTMLAnchorElement {
     connectedCallback() {
         new RippleMethods().onElementConnect(this.targetRipple);
     }
+
+    static get observedAttributes() {
+        return ['data-ripple-target'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'data-ripple-target') {
+            this.targetRipple = new RippleMethods().attributeChangedCallback([this], oldValue, newValue);
+        }
+    }
 }
 customElements.define('ripple-anchor', RippleAnchor, {
     extends: 'a',
@@ -242,6 +270,16 @@ class RippleSpan extends HTMLSpanElement {
 
     connectedCallback() {
         new RippleMethods().onElementConnect(this.targetRipple);
+    }
+
+    static get observedAttributes() {
+        return ['data-ripple-target'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'data-ripple-target') {
+            this.targetRipple = new RippleMethods().attributeChangedCallback([this], oldValue, newValue);
+        }
     }
 }
 customElements.define('ripple-span', RippleSpan, {
@@ -262,6 +300,16 @@ class RippleDiv extends HTMLDivElement {
     connectedCallback() {
         new RippleMethods().onElementConnect(this.targetRipple);
     }
+
+    static get observedAttributes() {
+        return ['data-ripple-target'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'data-ripple-target') {
+            this.targetRipple = new RippleMethods().attributeChangedCallback([this], oldValue, newValue);
+        }
+    }
 }
 customElements.define('ripple-div', RippleDiv, {
     extends: 'div',
@@ -281,6 +329,16 @@ class RippleLabel extends HTMLLabelElement {
     connectedCallback() {
         new RippleMethods().onElementConnect(this.targetRipple);
     }
+
+    static get observedAttributes() {
+        return ['data-ripple-target'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'data-ripple-target') {
+            this.targetRipple = new RippleMethods().attributeChangedCallback([this], oldValue, newValue);
+        }
+    }
 }
 customElements.define('ripple-label', RippleLabel, {
     extends: 'label',
@@ -299,6 +357,16 @@ class RippleBody extends HTMLBodyElement {
 
     connectedCallback() {
         new RippleMethods().onElementConnect(this.targetRipple);
+    }
+
+    static get observedAttributes() {
+        return ['data-ripple-target'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'data-ripple-target') {
+            this.targetRipple = new RippleMethods().attributeChangedCallback([this], oldValue, newValue);
+        }
     }
 }
 customElements.define('ripple-body', RippleBody, {
