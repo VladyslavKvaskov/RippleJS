@@ -30,6 +30,7 @@
       z-index: 0;
       user-select: none;
       transition: 0.3s;
+      pointer-events: none;
     }
 
     ripple-content, .ripple-content{
