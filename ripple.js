@@ -144,7 +144,7 @@ class RippleMethods {
                         _rippleEl.style.top = `calc(${this.ripplePosition[1]} - ${this.rippleRadius}px)`;
                     } else if (this.ripplePosition[0]) {
                         _rippleEl.style.left = `calc(${this.ripplePosition[0]} - ${this.rippleRadius}px)`;
-                        _rippleEl.style.top = `${this.ripplePosition[0] - this.rippleRadius}px`;
+                        _rippleEl.style.top = `calc(${this.ripplePosition[0]} - ${this.rippleRadius}px)`;
                     }
                 }
             } else if (!this.targetRipple.dataset.ripplePosition) {
