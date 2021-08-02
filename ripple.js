@@ -91,6 +91,14 @@ class RippleMethods {
         }
     }
 
+    onElementDisconnect(rippleElement) {
+        for (this.elementsToRipple of rippleElement) {
+            for (this.r of this.elementsToRipple.querySelectorAll('span.ripple')) {
+                this.r.remove();
+            }
+        }
+    }
+
     showRipple(e = '', rippleElement, originalElement) {
         for (this.elementsToRipple of rippleElement) {
             this.targetRipple = this.elementsToRipple;
@@ -173,7 +181,7 @@ class RippleMethods {
     }
 }
 
-class RippleElement extends HTMLElement {
+export class RippleElement extends HTMLElement {
     constructor() {
         super();
         this.targetRipple = [this];
@@ -186,6 +194,9 @@ class RippleElement extends HTMLElement {
 
     connectedCallback() {
         new RippleMethods().onElementConnect(this.targetRipple);
+    }
+    disconnectedCallback() {
+        new RippleMethods().onElementDisconnect(this.targetRipple);
     }
 
     static get observedAttributes() {
@@ -200,7 +211,7 @@ class RippleElement extends HTMLElement {
 }
 customElements.define('ripple-element', RippleElement);
 
-class RippleButton extends HTMLButtonElement {
+export class RippleButton extends HTMLButtonElement {
     constructor() {
         super();
         this.targetRipple = [this];
@@ -213,6 +224,9 @@ class RippleButton extends HTMLButtonElement {
 
     connectedCallback() {
         new RippleMethods().onElementConnect(this.targetRipple);
+    }
+    disconnectedCallback() {
+        new RippleMethods().onElementDisconnect(this.targetRipple);
     }
 
     static get observedAttributes() {
@@ -229,7 +243,7 @@ customElements.define('ripple-button', RippleButton, {
     extends: 'button',
 });
 
-class RippleAnchor extends HTMLAnchorElement {
+export class RippleAnchor extends HTMLAnchorElement {
     constructor() {
         super();
         this.targetRipple = [this];
@@ -242,6 +256,9 @@ class RippleAnchor extends HTMLAnchorElement {
 
     connectedCallback() {
         new RippleMethods().onElementConnect(this.targetRipple);
+    }
+    disconnectedCallback() {
+        new RippleMethods().onElementDisconnect(this.targetRipple);
     }
 
     static get observedAttributes() {
@@ -258,7 +275,7 @@ customElements.define('ripple-anchor', RippleAnchor, {
     extends: 'a',
 });
 
-class RippleSpan extends HTMLSpanElement {
+export class RippleSpan extends HTMLSpanElement {
     constructor() {
         super();
         this.targetRipple = [this];
@@ -271,6 +288,9 @@ class RippleSpan extends HTMLSpanElement {
 
     connectedCallback() {
         new RippleMethods().onElementConnect(this.targetRipple);
+    }
+    disconnectedCallback() {
+        new RippleMethods().onElementDisconnect(this.targetRipple);
     }
 
     static get observedAttributes() {
@@ -287,7 +307,7 @@ customElements.define('ripple-span', RippleSpan, {
     extends: 'span',
 });
 
-class RippleDiv extends HTMLDivElement {
+export class RippleDiv extends HTMLDivElement {
     constructor() {
         super();
         this.targetRipple = [this];
@@ -300,6 +320,9 @@ class RippleDiv extends HTMLDivElement {
 
     connectedCallback() {
         new RippleMethods().onElementConnect(this.targetRipple);
+    }
+    disconnectedCallback() {
+        new RippleMethods().onElementDisconnect(this.targetRipple);
     }
 
     static get observedAttributes() {
@@ -316,7 +339,7 @@ customElements.define('ripple-div', RippleDiv, {
     extends: 'div',
 });
 
-class RippleLabel extends HTMLLabelElement {
+export class RippleLabel extends HTMLLabelElement {
     constructor() {
         super();
         this.targetRipple = [this];
@@ -329,6 +352,9 @@ class RippleLabel extends HTMLLabelElement {
 
     connectedCallback() {
         new RippleMethods().onElementConnect(this.targetRipple);
+    }
+    disconnectedCallback() {
+        new RippleMethods().onElementDisconnect(this.targetRipple);
     }
 
     static get observedAttributes() {
@@ -345,7 +371,7 @@ customElements.define('ripple-label', RippleLabel, {
     extends: 'label',
 });
 
-class RippleBody extends HTMLBodyElement {
+export class RippleBody extends HTMLBodyElement {
     constructor() {
         super();
         this.targetRipple = [this];
@@ -358,6 +384,9 @@ class RippleBody extends HTMLBodyElement {
 
     connectedCallback() {
         new RippleMethods().onElementConnect(this.targetRipple);
+    }
+    disconnectedCallback() {
+        new RippleMethods().onElementDisconnect(this.targetRipple);
     }
 
     static get observedAttributes() {
